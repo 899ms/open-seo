@@ -16,16 +16,20 @@ import {
 // Both tools return the whole context, so they share one output shape. Every
 // MCP client pays for these schemas on tools/list, so the rows stay loose
 // objects — the rendered markdown in `text` is where the detail lives.
-const contextOutputSchema = {
-  sections: z.array(looseObjectOutputSchema),
-  missingSections: z.array(z.string()),
-  customSections: z.array(looseObjectOutputSchema),
-  competitors: z.array(looseObjectOutputSchema),
-  keyPages: z.array(looseObjectOutputSchema),
-  researchLog: z.array(looseObjectOutputSchema),
-  reportTemplates: z.array(looseObjectOutputSchema),
-  ...optionalMetaOutputSchema,
-} as const;
+// Clients cache this schema across deployments; new context fields must not
+// invalidate a response for clients still using the previous tools/list.
+const contextOutputSchema = z
+  .object({
+    sections: z.array(looseObjectOutputSchema),
+    missingSections: z.array(z.string()),
+    customSections: z.array(looseObjectOutputSchema),
+    competitors: z.array(looseObjectOutputSchema),
+    keyPages: z.array(looseObjectOutputSchema),
+    researchLog: z.array(looseObjectOutputSchema),
+    reportTemplates: z.array(looseObjectOutputSchema),
+    ...optionalMetaOutputSchema,
+  })
+  .passthrough();
 
 const contextPath = (projectId: string) => `/p/${projectId}/context`;
 

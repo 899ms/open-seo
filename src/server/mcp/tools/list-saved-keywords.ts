@@ -10,7 +10,7 @@ import type { SavedKeywordRow, SavedKeywordTagSummary } from "@/types/keywords";
 // The app reads the full SavedKeywordRow through its own server functions. The
 // MCP row keeps only what an agent acts on: ids, timestamps, tag colors, and the
 // monthly trend array were ~60% of the bytes and never used.
-const savedKeywordOutputSchema = z.object({
+const savedKeywordOutputSchema = z.looseObject({
   keyword: z.string(),
   searchVolume: z.number().nullable(),
   keywordDifficulty: z.number().nullable(),
@@ -64,12 +64,14 @@ export const listSavedKeywordsTool = {
     description:
       "Lists keywords saved to a project (with cached metrics like search volume, difficulty, CPC, and tags if available). Uses no credits — reads from OpenSEO's database, no DataForSEO call. Use tag filters when the user asks for a saved segment; multiple tags match ANY tag.",
     inputSchema,
-    outputSchema: {
+    outputSchema: z.looseObject({
       rows: z.array(savedKeywordOutputSchema),
       totalCount: z.number(),
-      tags: z.array(z.object({ name: z.string(), keywordCount: z.number() })),
+      tags: z.array(
+        z.looseObject({ name: z.string(), keywordCount: z.number() }),
+      ),
       ...optionalMetaOutputSchema,
-    },
+    }),
     annotations: {
       readOnlyHint: true,
       openWorldHint: false,

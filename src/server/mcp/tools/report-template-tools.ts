@@ -29,11 +29,11 @@ const templatesPath = (projectId: string) =>
 
 const listInputSchema = { projectId: projectIdSchema } as const;
 
-const listOutputSchema = {
+const listOutputSchema = z.looseObject({
   templates: z.array(looseObjectOutputSchema),
   remaining: z.number(),
   ...optionalMetaOutputSchema,
-} as const;
+});
 
 export const listReportTemplatesTool = {
   name: "list_report_templates",
@@ -119,13 +119,13 @@ const saveInputSchema = {
     ),
 } as const;
 
-const saveOutputSchema = {
+const saveOutputSchema = z.looseObject({
   templateId: z.string(),
   name: z.string(),
   created: z.boolean(),
   url: z.string(),
   ...optionalMetaOutputSchema,
-} as const;
+});
 
 export const saveReportTemplateTool = {
   name: "save_report_template",

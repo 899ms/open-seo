@@ -111,6 +111,9 @@ function registerOpenSeoTool<Input extends ToolSchema>(
   tool: OpenSeoToolDefinition<Input>,
   authProps: McpProps,
 ) {
+  // Output objects must allow added fields, including nested objects. The
+  // tools/list contract test checks every registered tool for cached-client
+  // compatibility; input schemas keep their existing validation rules.
   const outputSchema = objectSchema(tool.config.outputSchema);
   const handler = instrumentMcpToolHandler(
     tool.name,

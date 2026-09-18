@@ -101,14 +101,14 @@ const saveInputSchema = {
     ),
 } as const;
 
-const saveOutputSchema = {
+const saveOutputSchema = z.looseObject({
   reportId: z.string(),
   title: z.string(),
   created: z.boolean(),
   htmlBytes: z.number(),
   url: z.string(),
   ...optionalMetaOutputSchema,
-} as const;
+});
 
 export const saveReportTool = {
   name: "save_report",
@@ -205,13 +205,13 @@ const listInputSchema = {
     .describe("Rows to skip. Omit for the first page."),
 } as const;
 
-const listOutputSchema = {
+const listOutputSchema = z.looseObject({
   reports: z.array(looseObjectOutputSchema),
   totalCount: z.number(),
   rowCount: z.number(),
   remaining: z.number(),
   ...optionalMetaOutputSchema,
-} as const;
+});
 
 export const listReportsTool = {
   name: "list_reports",
@@ -296,10 +296,10 @@ const getInputSchema = {
     ),
 } as const;
 
-const getOutputSchema = {
+const getOutputSchema = z.looseObject({
   report: looseObjectOutputSchema,
   ...optionalMetaOutputSchema,
-} as const;
+});
 
 export const getReportTool = {
   name: "get_report",
