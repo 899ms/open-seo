@@ -21,6 +21,7 @@ import { Route as BlogsSplatRouteImport } from './routes/blogs/$'
 import { Route as ApiSubscribeRouteImport } from './routes/api/subscribe'
 import { Route as ApiEventRouteImport } from './routes/api/event'
 import { Route as ApiBacklinkCheckRouteImport } from './routes/api/backlink-check'
+import { Route as MarketingWhyOpenseoRouteImport } from './routes/_marketing/why-openseo'
 import { Route as MarketingTermsAndConditionsRouteImport } from './routes/_marketing/terms-and-conditions'
 import { Route as MarketingSupportRouteImport } from './routes/_marketing/support'
 import { Route as MarketingRoadmapRouteImport } from './routes/_marketing/roadmap'
@@ -132,6 +133,11 @@ const ApiBacklinkCheckRoute = ApiBacklinkCheckRouteImport.update({
   id: '/api/backlink-check',
   path: '/api/backlink-check',
   getParentRoute: () => rootRouteImport,
+} as any)
+const MarketingWhyOpenseoRoute = MarketingWhyOpenseoRouteImport.update({
+  id: '/why-openseo',
+  path: '/why-openseo',
+  getParentRoute: () => MarketingRoute,
 } as any)
 const MarketingTermsAndConditionsRoute =
   MarketingTermsAndConditionsRouteImport.update({
@@ -452,6 +458,7 @@ export interface FileRoutesByFullPath {
   '/roadmap': typeof MarketingRoadmapRoute
   '/support': typeof MarketingSupportRoute
   '/terms-and-conditions': typeof MarketingTermsAndConditionsRoute
+  '/why-openseo': typeof MarketingWhyOpenseoRoute
   '/api/backlink-check': typeof ApiBacklinkCheckRoute
   '/api/event': typeof ApiEventRoute
   '/api/subscribe': typeof ApiSubscribeRoute
@@ -516,6 +523,7 @@ export interface FileRoutesByTo {
   '/roadmap': typeof MarketingRoadmapRoute
   '/support': typeof MarketingSupportRoute
   '/terms-and-conditions': typeof MarketingTermsAndConditionsRoute
+  '/why-openseo': typeof MarketingWhyOpenseoRoute
   '/api/backlink-check': typeof ApiBacklinkCheckRoute
   '/api/event': typeof ApiEventRoute
   '/api/subscribe': typeof ApiSubscribeRoute
@@ -583,6 +591,7 @@ export interface FileRoutesById {
   '/_marketing/roadmap': typeof MarketingRoadmapRoute
   '/_marketing/support': typeof MarketingSupportRoute
   '/_marketing/terms-and-conditions': typeof MarketingTermsAndConditionsRoute
+  '/_marketing/why-openseo': typeof MarketingWhyOpenseoRoute
   '/api/backlink-check': typeof ApiBacklinkCheckRoute
   '/api/event': typeof ApiEventRoute
   '/api/subscribe': typeof ApiSubscribeRoute
@@ -651,6 +660,7 @@ export interface FileRouteTypes {
     | '/roadmap'
     | '/support'
     | '/terms-and-conditions'
+    | '/why-openseo'
     | '/api/backlink-check'
     | '/api/event'
     | '/api/subscribe'
@@ -715,6 +725,7 @@ export interface FileRouteTypes {
     | '/roadmap'
     | '/support'
     | '/terms-and-conditions'
+    | '/why-openseo'
     | '/api/backlink-check'
     | '/api/event'
     | '/api/subscribe'
@@ -781,6 +792,7 @@ export interface FileRouteTypes {
     | '/_marketing/roadmap'
     | '/_marketing/support'
     | '/_marketing/terms-and-conditions'
+    | '/_marketing/why-openseo'
     | '/api/backlink-check'
     | '/api/event'
     | '/api/subscribe'
@@ -937,6 +949,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/api/backlink-check'
       preLoaderRoute: typeof ApiBacklinkCheckRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_marketing/why-openseo': {
+      id: '/_marketing/why-openseo'
+      path: '/why-openseo'
+      fullPath: '/why-openseo'
+      preLoaderRoute: typeof MarketingWhyOpenseoRouteImport
+      parentRoute: typeof MarketingRoute
     }
     '/_marketing/terms-and-conditions': {
       id: '/_marketing/terms-and-conditions'
@@ -1314,6 +1333,7 @@ interface MarketingRouteChildren {
   MarketingRoadmapRoute: typeof MarketingRoadmapRoute
   MarketingSupportRoute: typeof MarketingSupportRoute
   MarketingTermsAndConditionsRoute: typeof MarketingTermsAndConditionsRoute
+  MarketingWhyOpenseoRoute: typeof MarketingWhyOpenseoRoute
   MarketingIndexRoute: typeof MarketingIndexRoute
   MarketingFeaturesAiBrandVisibilityRoute: typeof MarketingFeaturesAiBrandVisibilityRoute
   MarketingFeaturesAiSearchPromptsRoute: typeof MarketingFeaturesAiSearchPromptsRoute
@@ -1370,6 +1390,7 @@ const MarketingRouteChildren: MarketingRouteChildren = {
   MarketingRoadmapRoute: MarketingRoadmapRoute,
   MarketingSupportRoute: MarketingSupportRoute,
   MarketingTermsAndConditionsRoute: MarketingTermsAndConditionsRoute,
+  MarketingWhyOpenseoRoute: MarketingWhyOpenseoRoute,
   MarketingIndexRoute: MarketingIndexRoute,
   MarketingFeaturesAiBrandVisibilityRoute:
     MarketingFeaturesAiBrandVisibilityRoute,
