@@ -1,5 +1,23 @@
-import type { FormEvent, ReactNode, RefObject } from "react";
+import {
+  createContext,
+  useContext,
+  useRef,
+  useState,
+  type FormEvent,
+  type ReactNode,
+} from "react";
+import {
+  Turnstile,
+  DEFAULT_SCRIPT_ID,
+  type TurnstileInstance,
+} from "@marsidev/react-turnstile";
 import { TOOL_COUNTRIES } from "@/lib/free-tools/countries";
+
+const SITE_KEY =
+  import.meta.env.VITE_TURNSTILE_SITE_KEY?.trim() ||
+  (import.meta.env.DEV ? "1x00000000000000000000AA" : "");
+type VerificationStatus = "loading" | "ready" | "error";
+const VerificationContext = createContext<VerificationStatus>("loading");
 
 export type ToolStatus = "idle" | "loading" | "done" | "error";
 
@@ -61,48 +79,132 @@ export function SubmitButton({
   idleLabel: string;
   loadingLabel?: string;
 }) {
+  const verificationStatus = useContext(VerificationContext);
   return (
     <button
       type="submit"
-      disabled={status === "loading"}
+      disabled={status === "loading" || verificationStatus !== "ready"}
       className="h-11 shrink-0 rounded-lg bg-neutral-950 px-6 text-sm font-medium text-white transition-colors hover:bg-neutral-800 disabled:opacity-50"
     >
-      {status === "loading" ? loadingLabel : idleLabel}
+      {status === "loading"
+        ? loadingLabel
+        : verificationStatus === "loading"
+          ? "Verifying…"
+          : idleLabel}
     </button>
   );
 }
 
 /**
- * The card every tool form lives in: fields, the invisible Turnstile mount,
- * the "Free · No signup" microcopy, and the error line.
+ * Every API-backed tool submits through this form. It owns verification and
+ * supplies button readiness through context so individual tools cannot drift.
  */
 export function ToolForm({
   onSubmit,
-  turnstileRef,
+  input,
   status,
   errorMessage,
   cacheDuration = "24 hours",
   children,
 }: {
-  onSubmit: (event: FormEvent) => void;
-  turnstileRef?: RefObject<HTMLDivElement | null>;
+  onSubmit: (input: Record<string, unknown>, token: string) => Promise<void>;
+  input: Record<string, unknown>;
   status: ToolStatus;
   errorMessage: string;
   cacheDuration?: string;
   children: ReactNode;
 }) {
+  const widget = useRef<TurnstileInstance>(null);
+  const token = useRef("");
+  const submitting = useRef(false);
+  const scriptFailed = useRef(false);
+  const [widgetKey, setWidgetKey] = useState(0);
+  const [verification, setVerification] = useState<VerificationStatus>(
+    SITE_KEY ? "loading" : "error",
+  );
+  const updateToken = (value = "") => {
+    token.current = value;
+    setVerification(value ? "ready" : "loading");
+  };
+  const fail = () => {
+    token.current = "";
+    setVerification("error");
+  };
+  const retry = () => {
+    if (!SITE_KEY) return;
+    updateToken();
+    if (scriptFailed.current) {
+      document.getElementById(DEFAULT_SCRIPT_ID)?.remove();
+      scriptFailed.current = false;
+      setWidgetKey((key) => key + 1);
+    } else {
+      widget.current?.reset();
+    }
+  };
+  const submit = async (event: FormEvent) => {
+    event.preventDefault();
+    if (submitting.current || !token.current) return;
+    if (widget.current?.isExpired()) return retry();
+    const verifiedToken = token.current;
+    updateToken();
+    submitting.current = true;
+    try {
+      await onSubmit(input, verifiedToken);
+    } finally {
+      submitting.current = false;
+      updateToken();
+      widget.current?.reset();
+    }
+  };
   return (
     <form
-      onSubmit={onSubmit}
+      onSubmit={submit}
       className="rounded-xl border border-[var(--color-border-subtle)] bg-white p-4 md:p-5"
     >
-      {children}
-      {turnstileRef ? (
-        <div ref={turnstileRef} className="empty:hidden" />
+      <VerificationContext.Provider value={verification}>
+        {children}
+      </VerificationContext.Provider>
+      {SITE_KEY ? (
+        <Turnstile
+          key={widgetKey}
+          ref={widget}
+          siteKey={SITE_KEY}
+          options={{ appearance: "interaction-only", action: "free_tool" }}
+          onSuccess={updateToken}
+          onExpire={() => updateToken()}
+          onError={fail}
+          onTimeout={fail}
+          onUnsupported={fail}
+          scriptOptions={{
+            onError: () => {
+              scriptFailed.current = true;
+              fail();
+            },
+          }}
+        />
       ) : null}
       <p className="mt-2.5 text-xs text-[var(--color-brand-muted)]">
         Free &middot; No signup
       </p>
+      {verification === "loading" && status !== "loading" ? (
+        <p
+          role="status"
+          className="mt-2 text-xs text-[var(--color-brand-muted)]"
+        >
+          Verifying your browser. Complete the check above if prompted.
+        </p>
+      ) : null}
+      {verification === "error" ? (
+        <div role="alert" className="mt-2 text-sm text-red-600">
+          <p>
+            Verification could not complete. Check your connection and try
+            again.
+          </p>
+          <button type="button" onClick={retry} className="mt-1 underline">
+            Retry verification
+          </button>
+        </div>
+      ) : null}
       {status === "error" && errorMessage ? (
         <p role="alert" className="mt-2 text-sm text-red-600">
           {errorMessage}

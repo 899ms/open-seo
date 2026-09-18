@@ -1,5 +1,5 @@
 import { ToolTable } from "@/lib/free-tools/tool-table";
-import { type FormEvent, useState } from "react";
+import { useState } from "react";
 import { FIELD_CLASS, SubmitButton, ToolForm } from "@/lib/free-tools/form";
 import { formatCount, MetricGrid } from "@/lib/free-tools/metric-grid";
 import { UpsellCard } from "@/lib/free-tools/upsell-card";
@@ -26,19 +26,16 @@ type SpamResult = {
 
 export function SpamScoreCheckerTool() {
   const [target, setTarget] = useState("");
-  const { status, errorMessage, result, run, turnstile } =
-    useToolRun<SpamResult>(TOOL, "/api/spam-score-checker");
-
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault();
-    void run({ target });
-  };
+  const { status, errorMessage, result, run } = useToolRun<SpamResult>(
+    TOOL,
+    "/api/spam-score-checker",
+  );
 
   return (
     <div>
       <ToolForm
-        onSubmit={handleSubmit}
-        turnstileRef={turnstile.containerRef}
+        onSubmit={run}
+        input={{ target }}
         status={status}
         errorMessage={errorMessage}
       >

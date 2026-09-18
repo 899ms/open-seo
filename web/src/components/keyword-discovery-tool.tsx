@@ -1,4 +1,4 @@
-import { type FormEvent, useState } from "react";
+import { useState } from "react";
 import { DEFAULT_COUNTRY_CODE, countryLabel } from "@/lib/free-tools/countries";
 import {
   CountrySelect,
@@ -26,19 +26,15 @@ export function KeywordDiscoveryTool({
   const competitor = tool === "competitor-keyword-finder";
   const [input, setInput] = useState("");
   const [locationCode, setLocationCode] = useState(DEFAULT_COUNTRY_CODE);
-  const { status, errorMessage, result, run, turnstile } = useToolRun<Result>(
+  const { status, errorMessage, result, run } = useToolRun<Result>(
     tool,
     `/api/${tool}`,
   );
-  const handleSubmit = (event: FormEvent) => {
-    event.preventDefault();
-    void run({ [competitor ? "target" : "keyword"]: input, locationCode });
-  };
   return (
     <div>
       <ToolForm
-        onSubmit={handleSubmit}
-        turnstileRef={turnstile.containerRef}
+        onSubmit={run}
+        input={{ [competitor ? "target" : "keyword"]: input, locationCode }}
         status={status}
         errorMessage={errorMessage}
       >

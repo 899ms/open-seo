@@ -1,26 +1,22 @@
 import { useState } from "react";
 import { trackTool } from "@/lib/free-tools/analytics";
 import type { ToolStatus } from "@/lib/free-tools/form";
-import { useTurnstile } from "@/lib/free-tools/turnstile";
 
 /**
  * The submit cycle every API-backed free tool shares: status machine, error
- * message, Plausible events, and a single-use Turnstile token.
+ * message and Plausible events. ToolForm supplies the verified token.
  */
 export function useToolRun<T>(tool: string, path: string) {
   const [status, setStatus] = useState<ToolStatus>("idle");
   const [errorMessage, setErrorMessage] = useState("");
   const [result, setResult] = useState<T | null>(null);
-  const turnstile = useTurnstile();
 
-  const run = async (body: Record<string, unknown>) => {
+  const run = async (body: Record<string, unknown>, turnstileToken: string) => {
+    if (!turnstileToken) return;
     setStatus("loading");
     setErrorMessage("");
     trackTool("tool_run", tool);
     try {
-      // Blocks only while Turnstile is still solving; resolves immediately
-      // when no widget is configured.
-      const turnstileToken = await turnstile.waitForToken();
       const res = await fetch(path, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -42,11 +38,8 @@ export function useToolRun<T>(tool: string, path: string) {
       setErrorMessage(
         err instanceof Error ? err.message : "Something went wrong",
       );
-    } finally {
-      // Turnstile tokens are single-use; get a fresh one for the next run.
-      turnstile.reset();
     }
   };
 
-  return { status, errorMessage, result, run, turnstile };
+  return { status, errorMessage, result, run };
 }

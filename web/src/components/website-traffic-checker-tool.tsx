@@ -1,5 +1,5 @@
 import { ToolTable } from "@/lib/free-tools/tool-table";
-import { type FormEvent, useState } from "react";
+import { useState } from "react";
 import { DEFAULT_COUNTRY_CODE } from "@/lib/free-tools/countries";
 import {
   CountrySelect,
@@ -51,19 +51,16 @@ export function WebsiteTrafficCheckerTool() {
   const [target, setTarget] = useState("");
   const [compare, setCompare] = useState("");
   const [locationCode, setLocationCode] = useState(DEFAULT_COUNTRY_CODE);
-  const { status, errorMessage, result, run, turnstile } =
-    useToolRun<TrafficResult>(TOOL, "/api/website-traffic-checker");
-
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault();
-    void run({ target, compare: compare.trim() || undefined, locationCode });
-  };
+  const { status, errorMessage, result, run } = useToolRun<TrafficResult>(
+    TOOL,
+    "/api/website-traffic-checker",
+  );
 
   return (
     <div>
       <ToolForm
-        onSubmit={handleSubmit}
-        turnstileRef={turnstile.containerRef}
+        onSubmit={run}
+        input={{ target, compare: compare.trim() || undefined, locationCode }}
         status={status}
         errorMessage={errorMessage}
       >

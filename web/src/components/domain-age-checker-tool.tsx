@@ -1,5 +1,5 @@
 import { ToolTable } from "@/lib/free-tools/tool-table";
-import { type FormEvent, useState } from "react";
+import { useState } from "react";
 import { FIELD_CLASS, SubmitButton, ToolForm } from "@/lib/free-tools/form";
 import { UpsellCard } from "@/lib/free-tools/upsell-card";
 import { useToolRun } from "@/lib/free-tools/use-tool-run";
@@ -38,7 +38,7 @@ function formatAge(row: AgeRow): string {
 
 export function DomainAgeCheckerTool() {
   const [domains, setDomains] = useState("");
-  const { status, errorMessage, result, run, turnstile } = useToolRun<{
+  const { status, errorMessage, result, run } = useToolRun<{
     rows: AgeRow[];
   }>(TOOL, "/api/domain-age-checker");
 
@@ -48,16 +48,11 @@ export function DomainAgeCheckerTool() {
     .filter(Boolean);
   const overLimit = entered.length > MAX_DOMAINS;
 
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault();
-    void run({ domains: entered.slice(0, MAX_DOMAINS) });
-  };
-
   return (
     <div>
       <ToolForm
-        onSubmit={handleSubmit}
-        turnstileRef={turnstile.containerRef}
+        onSubmit={run}
+        input={{ domains: entered.slice(0, MAX_DOMAINS) }}
         status={status}
         errorMessage={errorMessage}
         cacheDuration="7 days"

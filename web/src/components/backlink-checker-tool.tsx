@@ -1,5 +1,5 @@
 import { ToolTable } from "@/lib/free-tools/tool-table";
-import { type FormEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { FIELD_CLASS, SubmitButton, ToolForm } from "@/lib/free-tools/form";
 import { formatCount, InfoTip, MetricGrid } from "@/lib/free-tools/metric-grid";
 import { UpsellCard } from "@/lib/free-tools/upsell-card";
@@ -34,8 +34,10 @@ export function BacklinkCheckerTool({
   initialTarget?: string;
 }) {
   const [target, setTarget] = useState("");
-  const { status, errorMessage, result, run, turnstile } =
-    useToolRun<CheckResult>(TOOL, "/api/backlink-check");
+  const { status, errorMessage, result, run } = useToolRun<CheckResult>(
+    TOOL,
+    "/api/backlink-check",
+  );
 
   // Applied after hydration so the prerendered HTML and the first client
   // render agree, whatever ?target= the visitor arrived with.
@@ -43,16 +45,11 @@ export function BacklinkCheckerTool({
     if (initialTarget) setTarget(initialTarget);
   }, [initialTarget]);
 
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault();
-    void run({ target });
-  };
-
   return (
     <div>
       <ToolForm
-        onSubmit={handleSubmit}
-        turnstileRef={turnstile.containerRef}
+        onSubmit={run}
+        input={{ target }}
         status={status}
         errorMessage={errorMessage}
       >

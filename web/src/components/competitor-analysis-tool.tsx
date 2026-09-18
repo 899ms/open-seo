@@ -1,6 +1,6 @@
 import { KeywordTable } from "@/lib/free-tools/keyword-table";
 import { ToolTable } from "@/lib/free-tools/tool-table";
-import { type FormEvent, useState } from "react";
+import { useState } from "react";
 import { DEFAULT_COUNTRY_CODE } from "@/lib/free-tools/countries";
 import {
   CountrySelect,
@@ -57,23 +57,20 @@ export function CompetitorAnalysisTool() {
   const [competitor, setCompetitor] = useState("");
   const [yourDomain, setYourDomain] = useState("");
   const [locationCode, setLocationCode] = useState(DEFAULT_COUNTRY_CODE);
-  const { status, errorMessage, result, run, turnstile } =
-    useToolRun<AnalysisResult>(TOOL, "/api/competitor-analysis");
-
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault();
-    void run({
-      competitor,
-      yourDomain: yourDomain.trim() || undefined,
-      locationCode,
-    });
-  };
+  const { status, errorMessage, result, run } = useToolRun<AnalysisResult>(
+    TOOL,
+    "/api/competitor-analysis",
+  );
 
   return (
     <div>
       <ToolForm
-        onSubmit={handleSubmit}
-        turnstileRef={turnstile.containerRef}
+        onSubmit={run}
+        input={{
+          competitor,
+          yourDomain: yourDomain.trim() || undefined,
+          locationCode,
+        }}
         status={status}
         errorMessage={errorMessage}
       >
