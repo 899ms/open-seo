@@ -64,7 +64,7 @@ const saveInputSchema = {
     .string()
     .min(1)
     .describe(
-      `Specific title shown in the report list, e.g. "badseo.dev SEO audit, Sep 2026". Never a generic label like "SEO Report". Max ${REPORT_MAX_TITLE_CHARS} characters.`,
+      `Report type or specific subject and full report date, e.g. "Competitive Landscape — Sep 17, 2026". Omit the project's website; include the subject's bare hostname only when it differs from the project website or the project has no website. Use the same title in the HTML title and h1. Never a generic label like "SEO Report". Max ${REPORT_MAX_TITLE_CHARS} characters.`,
     ),
   summary: z
     .string()
@@ -115,7 +115,7 @@ export const saveReportTool = {
   config: {
     title: "Save report",
     description:
-      "Saves a finished HTML report to this project, where anyone in the workspace can read and print it. Uses no credits. Call list_reports first and pass the matching reportId to replace that report instead of creating a near-duplicate — a save whose title already exists in the project is refused. Give the report a specific title (the subject and the period), a summary carrying the verdict, the top action and the key numbers, and the skill slug you are running. Then reply with the returned url, a one-line verdict and the single top action; do not paste the report into chat.",
+      "Saves a finished HTML report to this project, where anyone in the workspace can read and print it. Uses no credits. Call list_reports first and pass the matching reportId to replace that report instead of creating a near-duplicate — a save whose title already exists in the project is refused. Give the report a specific title (the report type or subject and full report date), a summary carrying the verdict, the top action and the key numbers, and the skill slug you are running. Then reply with the returned url, a one-line verdict and the single top action; do not paste the report into chat.",
     inputSchema: saveInputSchema,
     outputSchema: saveOutputSchema,
     annotations: {

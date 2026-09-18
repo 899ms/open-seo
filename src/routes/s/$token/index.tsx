@@ -12,9 +12,6 @@ import { loadSharePage } from "@/server/features/reports/sharePage";
 // content always carries this chrome.
 
 const MARKETING_URL = "https://openseo.so/?utm_source=shared_report";
-// The marketing site's card. Absolute because a link preview crawler resolves
-// og:image against nothing, and the app domain does not serve this asset.
-const SOCIAL_CARD_URL = "https://openseo.so/social-card.jpg";
 
 // The share sheet on touch devices only; on desktop macOS anchors it to the
 // window rather than the button, so the clipboard is used instead.
@@ -59,10 +56,17 @@ export const Route = createFileRoute("/s/$token/")({
             ]
           : []),
         { property: "og:url", content: data.url },
-        { property: "og:image", content: SOCIAL_CARD_URL },
-        { property: "og:image:width", content: "1200" },
-        { property: "og:image:height", content: "630" },
-        { name: "twitter:card", content: "summary_large_image" },
+        ...(data.state === "ok"
+          ? [
+              { property: "og:image", content: data.imageUrl },
+              { property: "og:image:width", content: "1200" },
+              { property: "og:image:height", content: "630" },
+              { property: "og:image:alt", content: `${data.title} · OpenSEO` },
+              { name: "twitter:image", content: data.imageUrl },
+              { name: "twitter:image:alt", content: `${data.title} · OpenSEO` },
+              { name: "twitter:card", content: "summary_large_image" },
+            ]
+          : []),
       ],
     };
   },

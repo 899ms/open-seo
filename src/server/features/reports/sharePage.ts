@@ -10,6 +10,7 @@ import {
   sharesEnabled,
 } from "@/server/features/reports/shareAccess";
 import { sharePath } from "@/shared/report-share";
+import { domainField } from "@/types/schemas/domain";
 
 /** What `/s/<token>` renders, and all it is told. No report or project id. */
 type SharePageData = {
@@ -19,6 +20,8 @@ type SharePageData = {
   description: string;
   /** Absolute canonical URL, for og:url. */
   url: string;
+  /** Absolute image URL, versioned by the saved report and displayed hostname. */
+  imageUrl: string;
   /** When the report was last saved, for the bar's "Updated …". */
   updatedAt: string;
 };
@@ -68,6 +71,7 @@ export const loadSharePage = createServerOnlyFn(
         title: "Report unavailable",
         description: "",
         url: canonical,
+        imageUrl: "",
         updatedAt: "",
       };
     };
@@ -82,11 +86,20 @@ export const loadSharePage = createServerOnlyFn(
     if (!report) return unavailable("missing");
     if (report.archived) return unavailable("archived");
 
+    const domain = domainField.safeParse(report.projectDomain);
+    // These parameters only version the URL; the image route reads its content
+    // from the authorized report, never from query parameters.
+    const imageVersion = new URLSearchParams({
+      v: report.updatedAt,
+      domain: domain.success ? domain.data : "",
+    });
+
     return {
       state: "ok",
       title: report.title,
       description: shareDescription(report.summary),
       url: canonical,
+      imageUrl: `${canonical}/og.png?${imageVersion}`,
       updatedAt: report.updatedAt,
     };
   },

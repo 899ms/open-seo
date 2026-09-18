@@ -34,7 +34,9 @@ Use a template only when the user names it, or asks for the kind of report a tem
 
 ## Title and summary
 
-- `title`: names the subject and the period, under 120 characters. "badseo.dev SEO audit, Sep 2026". Never "SEO Report" or "Analysis".
+- `title`: names the report type or specific subject and the full report date, under 120 characters. Use "Competitive Landscape — Sep 17, 2026" or "Keyword Research — Sep 17, 2026". Use the actual report date in `MMM D, YYYY` format, including the day and four-digit year; put the data coverage period in the report body. Never a generic "SEO Report" or "Analysis".
+- Omit the website from the title when the report is about the project's website. Compare hostnames, ignoring the protocol, `www.`, and trailing slash. If the subject is a different website, include its bare hostname, for example "Competitor Analysis: example.com — Sep 17, 2026". Also include the subject hostname when the project has no website set. Never put `https://` or a full URL in the title.
+- Use the same title in `save_report`, the HTML `<title>`, and the visible `<h1>` so the report list, share preview, and report agree.
 - `summary`: markdown under 2,500 characters, in this order — the verdict, the single top action, then the key numbers. This is what `list_reports` returns and what you or another agent read instead of the HTML, so write it for a reader who will never open the page.
 
 ## The closing section: how this report was made
@@ -74,7 +76,7 @@ Copy this, keep the CSS as it is, and replace the ALL-CAPS placeholders. Each pr
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>DOMAIN — REPORT TITLE</title>
+<title>REPORT TITLE</title>
 <style>
 /* One light look, on screen and on paper. The report is read inside the app,
    which has its own theme toggle, and a saved document has no way to hear about

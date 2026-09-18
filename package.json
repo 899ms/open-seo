@@ -115,6 +115,7 @@
     "robots-parser": "^3.0.1",
     "sonner": "^2.0.7",
     "tailwindcss": "^4.1.16",
+    "takumi-js": "2.13.7",
     "tldts": "^7.0.25",
     "yaml": "^2.9.0",
     "zod": "^4.1.12"
