@@ -30,6 +30,7 @@ import { Route as MarketingPricingRouteImport } from './routes/_marketing/pricin
 import { Route as MarketingOpenSourceSeoRouteImport } from './routes/_marketing/open-source-seo'
 import { Route as MarketingGoogleSearchConsoleMcpRouteImport } from './routes/_marketing/google-search-console-mcp'
 import { Route as MarketingBacklinkCheckerRouteImport } from './routes/_marketing/backlink-checker'
+import { Route as MarketingAboutRouteImport } from './routes/_marketing/about'
 import { Route as MarketingLibraryIndexRouteImport } from './routes/_marketing/library/index'
 import { Route as MarketingFeaturesIndexRouteImport } from './routes/_marketing/features/index'
 import { Route as MarketingFeaturesSiteAuditRouteImport } from './routes/_marketing/features/site-audit'
@@ -182,6 +183,11 @@ const MarketingBacklinkCheckerRoute =
     path: '/backlink-checker',
     getParentRoute: () => MarketingRoute,
   } as any)
+const MarketingAboutRoute = MarketingAboutRouteImport.update({
+  id: '/about',
+  path: '/about',
+  getParentRoute: () => MarketingRoute,
+} as any)
 const MarketingLibraryIndexRoute = MarketingLibraryIndexRouteImport.update({
   id: '/library/',
   path: '/library/',
@@ -450,6 +456,7 @@ const MarketingLibraryAiAgentSeoHumanInTheLoopContentRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof MarketingIndexRoute
+  '/about': typeof MarketingAboutRoute
   '/backlink-checker': typeof MarketingBacklinkCheckerRoute
   '/google-search-console-mcp': typeof MarketingGoogleSearchConsoleMcpRoute
   '/open-source-seo': typeof MarketingOpenSourceSeoRoute
@@ -515,6 +522,7 @@ export interface FileRoutesByFullPath {
   '/library/site-audit/': typeof MarketingLibrarySiteAuditIndexRoute
 }
 export interface FileRoutesByTo {
+  '/about': typeof MarketingAboutRoute
   '/backlink-checker': typeof MarketingBacklinkCheckerRoute
   '/google-search-console-mcp': typeof MarketingGoogleSearchConsoleMcpRoute
   '/open-source-seo': typeof MarketingOpenSourceSeoRoute
@@ -583,6 +591,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_marketing': typeof MarketingRouteWithChildren
+  '/_marketing/about': typeof MarketingAboutRoute
   '/_marketing/backlink-checker': typeof MarketingBacklinkCheckerRoute
   '/_marketing/google-search-console-mcp': typeof MarketingGoogleSearchConsoleMcpRoute
   '/_marketing/open-source-seo': typeof MarketingOpenSourceSeoRoute
@@ -652,6 +661,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/about'
     | '/backlink-checker'
     | '/google-search-console-mcp'
     | '/open-source-seo'
@@ -717,6 +727,7 @@ export interface FileRouteTypes {
     | '/library/site-audit/'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/about'
     | '/backlink-checker'
     | '/google-search-console-mcp'
     | '/open-source-seo'
@@ -784,6 +795,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/_marketing'
+    | '/_marketing/about'
     | '/_marketing/backlink-checker'
     | '/_marketing/google-search-console-mcp'
     | '/_marketing/open-source-seo'
@@ -1011,6 +1023,13 @@ declare module '@tanstack/react-router' {
       path: '/backlink-checker'
       fullPath: '/backlink-checker'
       preLoaderRoute: typeof MarketingBacklinkCheckerRouteImport
+      parentRoute: typeof MarketingRoute
+    }
+    '/_marketing/about': {
+      id: '/_marketing/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof MarketingAboutRouteImport
       parentRoute: typeof MarketingRoute
     }
     '/_marketing/library/': {
@@ -1325,6 +1344,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface MarketingRouteChildren {
+  MarketingAboutRoute: typeof MarketingAboutRoute
   MarketingBacklinkCheckerRoute: typeof MarketingBacklinkCheckerRoute
   MarketingGoogleSearchConsoleMcpRoute: typeof MarketingGoogleSearchConsoleMcpRoute
   MarketingOpenSourceSeoRoute: typeof MarketingOpenSourceSeoRoute
@@ -1382,6 +1402,7 @@ interface MarketingRouteChildren {
 }
 
 const MarketingRouteChildren: MarketingRouteChildren = {
+  MarketingAboutRoute: MarketingAboutRoute,
   MarketingBacklinkCheckerRoute: MarketingBacklinkCheckerRoute,
   MarketingGoogleSearchConsoleMcpRoute: MarketingGoogleSearchConsoleMcpRoute,
   MarketingOpenSourceSeoRoute: MarketingOpenSourceSeoRoute,

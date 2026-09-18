@@ -60,6 +60,7 @@ export function SiteFooter({ className }: { className?: string }) {
         <div>
           <p className="font-semibold text-neutral-900">Company</p>
           <div className="mt-2 flex flex-col gap-1.5">
+            <Link to="/about">About</Link>
             <Link to="/why-openseo">Why OpenSEO</Link>
             <Link to="/support">Support</Link>
             <Link to="/roadmap">Roadmap</Link>

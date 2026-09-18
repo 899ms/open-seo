@@ -27,6 +27,7 @@ const STATIC_PATHS = [
   "/features/mcp",
   "/backlink-checker",
   "/open-source-seo",
+  "/about",
   "/why-openseo",
   "/google-search-console-mcp",
   "/roadmap",
