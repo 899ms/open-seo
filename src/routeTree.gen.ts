@@ -19,7 +19,6 @@ import { Route as ProjectRouteRouteImport } from './routes/_project/route'
 import { Route as AppRouteRouteImport } from './routes/_app/route'
 import { Route as AppIndexRouteImport } from './routes/_app/index'
 import { Route as RReportIdRouteImport } from './routes/r/$reportId'
-import { Route as MockupsSignupRouteImport } from './routes/mockups.signup'
 import { Route as ApiHealthRouteImport } from './routes/api/health'
 import { Route as AcceptInvitationIdRouteImport } from './routes/accept-invitation.$id'
 import { Route as AuthenticatedSubscribeRouteImport } from './routes/_authenticated.subscribe'
@@ -114,11 +113,6 @@ const AppIndexRoute = AppIndexRouteImport.update({
 const RReportIdRoute = RReportIdRouteImport.update({
   id: '/r/$reportId',
   path: '/r/$reportId',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const MockupsSignupRoute = MockupsSignupRouteImport.update({
-  id: '/mockups/signup',
-  path: '/mockups/signup',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiHealthRoute = ApiHealthRouteImport.update({
@@ -407,7 +401,6 @@ export interface FileRoutesByFullPath {
   '/subscribe': typeof AuthenticatedSubscribeRoute
   '/accept-invitation/$id': typeof AcceptInvitationIdRoute
   '/api/health': typeof ApiHealthRoute
-  '/mockups/signup': typeof MockupsSignupRoute
   '/r/$reportId': typeof RReportIdRoute
   '/p/$projectId': typeof ProjectPProjectIdRouteRouteWithChildren
   '/help/dataforseo-api-key': typeof AppHelpDataforseoApiKeyRoute
@@ -464,7 +457,6 @@ export interface FileRoutesByTo {
   '/subscribe': typeof AuthenticatedSubscribeRoute
   '/accept-invitation/$id': typeof AcceptInvitationIdRoute
   '/api/health': typeof ApiHealthRoute
-  '/mockups/signup': typeof MockupsSignupRoute
   '/r/$reportId': typeof RReportIdRoute
   '/help/dataforseo-api-key': typeof AppHelpDataforseoApiKeyRoute
   '/help/openrouter-api-key': typeof AppHelpOpenrouterApiKeyRoute
@@ -522,7 +514,6 @@ export interface FileRoutesById {
   '/_authenticated/subscribe': typeof AuthenticatedSubscribeRoute
   '/accept-invitation/$id': typeof AcceptInvitationIdRoute
   '/api/health': typeof ApiHealthRoute
-  '/mockups/signup': typeof MockupsSignupRoute
   '/r/$reportId': typeof RReportIdRoute
   '/_app/': typeof AppIndexRoute
   '/_project/p/$projectId': typeof ProjectPProjectIdRouteRouteWithChildren
@@ -583,7 +574,6 @@ export interface FileRouteTypes {
     | '/subscribe'
     | '/accept-invitation/$id'
     | '/api/health'
-    | '/mockups/signup'
     | '/r/$reportId'
     | '/p/$projectId'
     | '/help/dataforseo-api-key'
@@ -640,7 +630,6 @@ export interface FileRouteTypes {
     | '/subscribe'
     | '/accept-invitation/$id'
     | '/api/health'
-    | '/mockups/signup'
     | '/r/$reportId'
     | '/help/dataforseo-api-key'
     | '/help/openrouter-api-key'
@@ -697,7 +686,6 @@ export interface FileRouteTypes {
     | '/_authenticated/subscribe'
     | '/accept-invitation/$id'
     | '/api/health'
-    | '/mockups/signup'
     | '/r/$reportId'
     | '/_app/'
     | '/_project/p/$projectId'
@@ -750,7 +738,6 @@ export interface RootRouteChildren {
   Char91DotwellKnownChar93OpenaiAppsChallengeRoute: typeof Char91DotwellKnownChar93OpenaiAppsChallengeRoute
   AcceptInvitationIdRoute: typeof AcceptInvitationIdRoute
   ApiHealthRoute: typeof ApiHealthRoute
-  MockupsSignupRoute: typeof MockupsSignupRoute
   RReportIdRoute: typeof RReportIdRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
   ApiAutumnSplatRoute: typeof ApiAutumnSplatRoute
@@ -831,13 +818,6 @@ declare module '@tanstack/react-router' {
       path: '/r/$reportId'
       fullPath: '/r/$reportId'
       preLoaderRoute: typeof RReportIdRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/mockups/signup': {
-      id: '/mockups/signup'
-      path: '/mockups/signup'
-      fullPath: '/mockups/signup'
-      preLoaderRoute: typeof MockupsSignupRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/health': {
@@ -1384,7 +1364,6 @@ const rootRouteChildren: RootRouteChildren = {
     Char91DotwellKnownChar93OpenaiAppsChallengeRoute,
   AcceptInvitationIdRoute: AcceptInvitationIdRoute,
   ApiHealthRoute: ApiHealthRoute,
-  MockupsSignupRoute: MockupsSignupRoute,
   RReportIdRoute: RReportIdRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
   ApiAutumnSplatRoute: ApiAutumnSplatRoute,
