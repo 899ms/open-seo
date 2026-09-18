@@ -6,12 +6,8 @@ import {
   type FormEvent,
   type ReactNode,
 } from "react";
-import {
-  Turnstile,
-  DEFAULT_SCRIPT_ID,
-  type TurnstileInstance,
-} from "@marsidev/react-turnstile";
 import { TOOL_COUNTRIES } from "@/lib/free-tools/countries";
+import { useTurnstile } from "@/lib/free-tools/turnstile";
 
 const SITE_KEY =
   import.meta.env.VITE_TURNSTILE_SITE_KEY?.trim() ||
@@ -114,11 +110,8 @@ export function ToolForm({
   cacheDuration?: string;
   children: ReactNode;
 }) {
-  const widget = useRef<TurnstileInstance>(null);
   const token = useRef("");
   const submitting = useRef(false);
-  const scriptFailed = useRef(false);
-  const [widgetKey, setWidgetKey] = useState(0);
   const [verification, setVerification] = useState<VerificationStatus>(
     SITE_KEY ? "loading" : "error",
   );
@@ -130,21 +123,16 @@ export function ToolForm({
     token.current = "";
     setVerification("error");
   };
+  const widget = useTurnstile(SITE_KEY, updateToken, fail);
   const retry = () => {
     if (!SITE_KEY) return;
     updateToken();
-    if (scriptFailed.current) {
-      document.getElementById(DEFAULT_SCRIPT_ID)?.remove();
-      scriptFailed.current = false;
-      setWidgetKey((key) => key + 1);
-    } else {
-      widget.current?.reset();
-    }
+    widget.reset();
   };
   const submit = async (event: FormEvent) => {
     event.preventDefault();
     if (submitting.current || !token.current) return;
-    if (widget.current?.isExpired()) return retry();
+    if (widget.isExpired()) return retry();
     const verifiedToken = token.current;
     updateToken();
     submitting.current = true;
@@ -153,7 +141,7 @@ export function ToolForm({
     } finally {
       submitting.current = false;
       updateToken();
-      widget.current?.reset();
+      widget.reset();
     }
   };
   return (
@@ -164,25 +152,7 @@ export function ToolForm({
       <VerificationContext.Provider value={verification}>
         {children}
       </VerificationContext.Provider>
-      {SITE_KEY ? (
-        <Turnstile
-          key={widgetKey}
-          ref={widget}
-          siteKey={SITE_KEY}
-          options={{ appearance: "interaction-only", action: "free_tool" }}
-          onSuccess={updateToken}
-          onExpire={() => updateToken()}
-          onError={fail}
-          onTimeout={fail}
-          onUnsupported={fail}
-          scriptOptions={{
-            onError: () => {
-              scriptFailed.current = true;
-              fail();
-            },
-          }}
-        />
-      ) : null}
+      {SITE_KEY ? <div ref={widget.container} /> : null}
       <p className="mt-2.5 text-xs text-[var(--color-brand-muted)]">
         Free &middot; No signup
       </p>
