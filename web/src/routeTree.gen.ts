@@ -9,8 +9,6 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as TermsAndConditionsRouteImport } from './routes/terms-and-conditions'
-import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as MarketingRouteImport } from './routes/_marketing'
 import { Route as GuidesIndexRouteImport } from './routes/guides/index'
 import { Route as DocsIndexRouteImport } from './routes/docs/index'
@@ -23,8 +21,10 @@ import { Route as BlogsSplatRouteImport } from './routes/blogs/$'
 import { Route as ApiSubscribeRouteImport } from './routes/api/subscribe'
 import { Route as ApiEventRouteImport } from './routes/api/event'
 import { Route as ApiBacklinkCheckRouteImport } from './routes/api/backlink-check'
+import { Route as MarketingTermsAndConditionsRouteImport } from './routes/_marketing/terms-and-conditions'
 import { Route as MarketingSupportRouteImport } from './routes/_marketing/support'
 import { Route as MarketingRoadmapRouteImport } from './routes/_marketing/roadmap'
+import { Route as MarketingPrivacyRouteImport } from './routes/_marketing/privacy'
 import { Route as MarketingPricingRouteImport } from './routes/_marketing/pricing'
 import { Route as MarketingOpenSourceSeoRouteImport } from './routes/_marketing/open-source-seo'
 import { Route as MarketingGoogleSearchConsoleMcpRouteImport } from './routes/_marketing/google-search-console-mcp'
@@ -74,16 +74,6 @@ import { Route as MarketingLibraryAiAgentSeoSkillsMemoryAndTheTraceRouteImport }
 import { Route as MarketingLibraryAiAgentSeoRunSeoFromYourAiAssistantRouteImport } from './routes/_marketing/library/ai-agent-seo/run-seo-from-your-ai-assistant'
 import { Route as MarketingLibraryAiAgentSeoHumanInTheLoopContentRouteImport } from './routes/_marketing/library/ai-agent-seo/human-in-the-loop-content'
 
-const TermsAndConditionsRoute = TermsAndConditionsRouteImport.update({
-  id: '/terms-and-conditions',
-  path: '/terms-and-conditions',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PrivacyRoute = PrivacyRouteImport.update({
-  id: '/privacy',
-  path: '/privacy',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const MarketingRoute = MarketingRouteImport.update({
   id: '/_marketing',
   getParentRoute: () => rootRouteImport,
@@ -143,6 +133,12 @@ const ApiBacklinkCheckRoute = ApiBacklinkCheckRouteImport.update({
   path: '/api/backlink-check',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MarketingTermsAndConditionsRoute =
+  MarketingTermsAndConditionsRouteImport.update({
+    id: '/terms-and-conditions',
+    path: '/terms-and-conditions',
+    getParentRoute: () => MarketingRoute,
+  } as any)
 const MarketingSupportRoute = MarketingSupportRouteImport.update({
   id: '/support',
   path: '/support',
@@ -151,6 +147,11 @@ const MarketingSupportRoute = MarketingSupportRouteImport.update({
 const MarketingRoadmapRoute = MarketingRoadmapRouteImport.update({
   id: '/roadmap',
   path: '/roadmap',
+  getParentRoute: () => MarketingRoute,
+} as any)
+const MarketingPrivacyRoute = MarketingPrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
   getParentRoute: () => MarketingRoute,
 } as any)
 const MarketingPricingRoute = MarketingPricingRouteImport.update({
@@ -443,14 +444,14 @@ const MarketingLibraryAiAgentSeoHumanInTheLoopContentRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof MarketingIndexRoute
-  '/privacy': typeof PrivacyRoute
-  '/terms-and-conditions': typeof TermsAndConditionsRoute
   '/backlink-checker': typeof MarketingBacklinkCheckerRoute
   '/google-search-console-mcp': typeof MarketingGoogleSearchConsoleMcpRoute
   '/open-source-seo': typeof MarketingOpenSourceSeoRoute
   '/pricing': typeof MarketingPricingRoute
+  '/privacy': typeof MarketingPrivacyRoute
   '/roadmap': typeof MarketingRoadmapRoute
   '/support': typeof MarketingSupportRoute
+  '/terms-and-conditions': typeof MarketingTermsAndConditionsRoute
   '/api/backlink-check': typeof ApiBacklinkCheckRoute
   '/api/event': typeof ApiEventRoute
   '/api/subscribe': typeof ApiSubscribeRoute
@@ -507,14 +508,14 @@ export interface FileRoutesByFullPath {
   '/library/site-audit/': typeof MarketingLibrarySiteAuditIndexRoute
 }
 export interface FileRoutesByTo {
-  '/privacy': typeof PrivacyRoute
-  '/terms-and-conditions': typeof TermsAndConditionsRoute
   '/backlink-checker': typeof MarketingBacklinkCheckerRoute
   '/google-search-console-mcp': typeof MarketingGoogleSearchConsoleMcpRoute
   '/open-source-seo': typeof MarketingOpenSourceSeoRoute
   '/pricing': typeof MarketingPricingRoute
+  '/privacy': typeof MarketingPrivacyRoute
   '/roadmap': typeof MarketingRoadmapRoute
   '/support': typeof MarketingSupportRoute
+  '/terms-and-conditions': typeof MarketingTermsAndConditionsRoute
   '/api/backlink-check': typeof ApiBacklinkCheckRoute
   '/api/event': typeof ApiEventRoute
   '/api/subscribe': typeof ApiSubscribeRoute
@@ -574,14 +575,14 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_marketing': typeof MarketingRouteWithChildren
-  '/privacy': typeof PrivacyRoute
-  '/terms-and-conditions': typeof TermsAndConditionsRoute
   '/_marketing/backlink-checker': typeof MarketingBacklinkCheckerRoute
   '/_marketing/google-search-console-mcp': typeof MarketingGoogleSearchConsoleMcpRoute
   '/_marketing/open-source-seo': typeof MarketingOpenSourceSeoRoute
   '/_marketing/pricing': typeof MarketingPricingRoute
+  '/_marketing/privacy': typeof MarketingPrivacyRoute
   '/_marketing/roadmap': typeof MarketingRoadmapRoute
   '/_marketing/support': typeof MarketingSupportRoute
+  '/_marketing/terms-and-conditions': typeof MarketingTermsAndConditionsRoute
   '/api/backlink-check': typeof ApiBacklinkCheckRoute
   '/api/event': typeof ApiEventRoute
   '/api/subscribe': typeof ApiSubscribeRoute
@@ -642,14 +643,14 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/privacy'
-    | '/terms-and-conditions'
     | '/backlink-checker'
     | '/google-search-console-mcp'
     | '/open-source-seo'
     | '/pricing'
+    | '/privacy'
     | '/roadmap'
     | '/support'
+    | '/terms-and-conditions'
     | '/api/backlink-check'
     | '/api/event'
     | '/api/subscribe'
@@ -706,14 +707,14 @@ export interface FileRouteTypes {
     | '/library/site-audit/'
   fileRoutesByTo: FileRoutesByTo
   to:
-    | '/privacy'
-    | '/terms-and-conditions'
     | '/backlink-checker'
     | '/google-search-console-mcp'
     | '/open-source-seo'
     | '/pricing'
+    | '/privacy'
     | '/roadmap'
     | '/support'
+    | '/terms-and-conditions'
     | '/api/backlink-check'
     | '/api/event'
     | '/api/subscribe'
@@ -772,14 +773,14 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/_marketing'
-    | '/privacy'
-    | '/terms-and-conditions'
     | '/_marketing/backlink-checker'
     | '/_marketing/google-search-console-mcp'
     | '/_marketing/open-source-seo'
     | '/_marketing/pricing'
+    | '/_marketing/privacy'
     | '/_marketing/roadmap'
     | '/_marketing/support'
+    | '/_marketing/terms-and-conditions'
     | '/api/backlink-check'
     | '/api/event'
     | '/api/subscribe'
@@ -839,8 +840,6 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   MarketingRoute: typeof MarketingRouteWithChildren
-  PrivacyRoute: typeof PrivacyRoute
-  TermsAndConditionsRoute: typeof TermsAndConditionsRoute
   ApiBacklinkCheckRoute: typeof ApiBacklinkCheckRoute
   ApiEventRoute: typeof ApiEventRoute
   ApiSubscribeRoute: typeof ApiSubscribeRoute
@@ -855,20 +854,6 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/terms-and-conditions': {
-      id: '/terms-and-conditions'
-      path: '/terms-and-conditions'
-      fullPath: '/terms-and-conditions'
-      preLoaderRoute: typeof TermsAndConditionsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/privacy': {
-      id: '/privacy'
-      path: '/privacy'
-      fullPath: '/privacy'
-      preLoaderRoute: typeof PrivacyRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/_marketing': {
       id: '/_marketing'
       path: ''
@@ -953,6 +938,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiBacklinkCheckRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_marketing/terms-and-conditions': {
+      id: '/_marketing/terms-and-conditions'
+      path: '/terms-and-conditions'
+      fullPath: '/terms-and-conditions'
+      preLoaderRoute: typeof MarketingTermsAndConditionsRouteImport
+      parentRoute: typeof MarketingRoute
+    }
     '/_marketing/support': {
       id: '/_marketing/support'
       path: '/support'
@@ -965,6 +957,13 @@ declare module '@tanstack/react-router' {
       path: '/roadmap'
       fullPath: '/roadmap'
       preLoaderRoute: typeof MarketingRoadmapRouteImport
+      parentRoute: typeof MarketingRoute
+    }
+    '/_marketing/privacy': {
+      id: '/_marketing/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof MarketingPrivacyRouteImport
       parentRoute: typeof MarketingRoute
     }
     '/_marketing/pricing': {
@@ -1311,8 +1310,10 @@ interface MarketingRouteChildren {
   MarketingGoogleSearchConsoleMcpRoute: typeof MarketingGoogleSearchConsoleMcpRoute
   MarketingOpenSourceSeoRoute: typeof MarketingOpenSourceSeoRoute
   MarketingPricingRoute: typeof MarketingPricingRoute
+  MarketingPrivacyRoute: typeof MarketingPrivacyRoute
   MarketingRoadmapRoute: typeof MarketingRoadmapRoute
   MarketingSupportRoute: typeof MarketingSupportRoute
+  MarketingTermsAndConditionsRoute: typeof MarketingTermsAndConditionsRoute
   MarketingIndexRoute: typeof MarketingIndexRoute
   MarketingFeaturesAiBrandVisibilityRoute: typeof MarketingFeaturesAiBrandVisibilityRoute
   MarketingFeaturesAiSearchPromptsRoute: typeof MarketingFeaturesAiSearchPromptsRoute
@@ -1365,8 +1366,10 @@ const MarketingRouteChildren: MarketingRouteChildren = {
   MarketingGoogleSearchConsoleMcpRoute: MarketingGoogleSearchConsoleMcpRoute,
   MarketingOpenSourceSeoRoute: MarketingOpenSourceSeoRoute,
   MarketingPricingRoute: MarketingPricingRoute,
+  MarketingPrivacyRoute: MarketingPrivacyRoute,
   MarketingRoadmapRoute: MarketingRoadmapRoute,
   MarketingSupportRoute: MarketingSupportRoute,
+  MarketingTermsAndConditionsRoute: MarketingTermsAndConditionsRoute,
   MarketingIndexRoute: MarketingIndexRoute,
   MarketingFeaturesAiBrandVisibilityRoute:
     MarketingFeaturesAiBrandVisibilityRoute,
@@ -1451,8 +1454,6 @@ const MarketingRouteWithChildren = MarketingRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   MarketingRoute: MarketingRouteWithChildren,
-  PrivacyRoute: PrivacyRoute,
-  TermsAndConditionsRoute: TermsAndConditionsRoute,
   ApiBacklinkCheckRoute: ApiBacklinkCheckRoute,
   ApiEventRoute: ApiEventRoute,
   ApiSubscribeRoute: ApiSubscribeRoute,
