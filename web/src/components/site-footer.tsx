@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { featureGroups } from "@/lib/feature-pages";
+import { freeToolList } from "@/lib/free-tools/tool-pages";
 
 const featureLinks = featureGroups.flatMap((group) =>
   group.pages.map((page) => ({
@@ -53,7 +54,15 @@ export function SiteFooter({ className }: { className?: string }) {
         <div>
           <p className="font-semibold text-neutral-900">Free Tools</p>
           <div className="mt-2 flex flex-col gap-1.5">
-            <Link to="/backlink-checker">Backlink Checker</Link>
+            {freeToolList.map((tool) => (
+              <a key={tool.slug} href={tool.path}>
+                {tool.name}
+              </a>
+            ))}
+            <Link to="/google-search-console-mcp">
+              Google Search Console MCP
+            </Link>
+            <Link to="/tools">All free tools</Link>
           </div>
         </div>
 
