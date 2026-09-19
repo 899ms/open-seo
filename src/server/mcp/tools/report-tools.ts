@@ -24,9 +24,8 @@ import {
   type ReportMetadata,
 } from "@/types/schemas/reports";
 
-// The three report tools. All free (they touch only the app DB), all wrapped in
-// withMcpProjectAuth, and all answering with the in-app report URL so an agent
-// can hand back a link instead of pasting a document into chat.
+// Report tools use only the app DB and authorize the project before access.
+// Reads/saves link to the report; deletion links back to the report list.
 
 const reportPath = (projectId: string, reportId: string) =>
   `/p/${projectId}/reports/${reportId}`;
@@ -358,6 +357,45 @@ export const getReportTool = {
             url,
           },
         },
+      });
+    },
+  ),
+};
+
+const deleteInputSchema = {
+  projectId: projectIdSchema,
+  reportId: getInputSchema.reportId,
+} as const;
+
+export const deleteReportTool = {
+  name: "delete_report",
+  config: {
+    title: "Delete report",
+    description:
+      "Permanently deletes one saved report and makes its shared link unavailable. Uses no credits. Call list_reports to find the exact reportId. Does not delete site audits, templates, or project context.",
+    inputSchema: deleteInputSchema,
+    outputSchema: z.looseObject({
+      reportId: z.string(),
+      deleted: z.literal(true),
+      ...optionalMetaOutputSchema,
+    }),
+    annotations: {
+      readOnlyHint: false,
+      openWorldHint: false,
+      destructiveHint: true,
+    },
+  },
+  handler: withMcpProjectAuth(
+    async (args: z.infer<z.ZodObject<typeof deleteInputSchema>>, context) => {
+      await ReportService.deleteReport(args.projectId, args.reportId);
+      return mcpResponse({
+        text: `Deleted report ${args.reportId}.`,
+        meta: buildProjectMeta(
+          context,
+          args.projectId,
+          `/p/${args.projectId}/reports`,
+        ),
+        structuredContent: { reportId: args.reportId, deleted: true as const },
       });
     },
   ),

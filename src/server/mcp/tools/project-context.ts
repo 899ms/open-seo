@@ -74,7 +74,7 @@ const updateInputSchema = {
   // The batch cap lives with the server function's schema so both entry points
   // accept exactly the same patch list.
   updates: updateProjectContextSchema.shape.updates.describe(
-    "Patch ops, applied in order. Empty section content clears the section; adds upsert by domain/url; research-log entries are date-stamped by the server.",
+    'Patch ops, applied in order. Clear a standard section with {section: "current_goal", content: ""}; delete a custom section with {deleteCustomSection: "slug"}; removeCompetitors takes domains, removeKeyPages takes URLs, and removeResearchLog takes entry IDs from the project context. Adds upsert by domain/url; research-log entries are date-stamped by the server.',
   ),
 } as const;
 
@@ -89,7 +89,7 @@ export function buildUpdateProjectContextTool(author: ContextAuthor) {
     config: {
       title: "Update project context",
       description:
-        "Writes to a project's shared memory so the app, SAM, and other agents see it. Uses no credits. Send a list of patch ops; sections are prose (~4,000 chars max), competitors and key pages are curated shortlists (100 max each), and appendResearchLog records what research was bought so nobody re-buys it. Confirm facts with the user before storing them.",
+        "Adds, edits, or deletes a project's shared memory so the app, SAM, and other agents see it. Uses no credits. Use the current project context to find the entries to remove. Send patch ops to clear sections, deleteCustomSection, removeCompetitors, removeKeyPages, or removeResearchLog. Sections are prose (~4,000 chars max), competitors and key pages are curated shortlists (100 max each), and appendResearchLog records research already bought. Report templates are managed separately. Confirm facts with the user before storing them.",
       inputSchema: updateInputSchema,
       outputSchema: contextOutputSchema,
       annotations: {
